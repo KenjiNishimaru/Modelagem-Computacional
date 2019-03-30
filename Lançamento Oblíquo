@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#define PI 3.14159265358979323846
+
+/// Lançamento Oblíquo ///
+
+int main()
+{
+    //arquivo
+    FILE *velocidadeT, *alturaT, *energiaT;
+    velocidadeT=fopen("velocidade.txt", "w");
+    alturaT=fopen("altura.txt", "w");
+    energiaT=fopen("energia.txt", "w");
+
+    //variaveis
+    float velocidade, altura, gravidade, atrito, massa, angulo;
+    float velX, velY, altX, altY;
+    float dt, delta = 0.01;
+
+    //parâmetros
+    printf("Digite a velocidade:\n");
+    scanf("%f",&velocidade);
+    printf("Digite a altura:\n");
+    scanf("%f",&altura);
+    printf("Digite a gravidade:\n");
+    scanf("%f",&gravidade);
+    printf("Digite o atrito:\n");
+    scanf("%f",&atrito);
+    printf("Digite a massa:\n");
+    scanf("%f",&massa);
+    printf("Digite o angulo:\n");
+    scanf("%f",&angulo);
+
+    //dados aguçados
+    velX=velocidade*cos((angulo*PI)/180);
+    velY=velocidade*sin((angulo*PI)/180);
+    altY=altura;
+    altX=0.0;
+    //modelagem
+    for(dt=0.0;dt<10.0;dt=dt+0.01){
+        //velocidade
+        printf("velocidades: %.2f %.2f %.2f\n", dt, velX, velY);
+        fprintf(velocidadeT, "%.2f %.2f %.2f\n", dt, velX, velY);
+        velX=velX+((-(atrito*velX)/massa)*delta);
+        velY=velY+((-gravidade-(atrito*velY)/massa)*delta);
+        //altura
+        printf("alturas: %.2f %.2f %.2f\n", dt, altX, altY);
+        fprintf(alturaT, "%.2f %.2f %.2f\n", dt, altX, altY);
+        altY=altY+(velY*delta);
+        //objeto se fixa ao chão
+        if(altY<0.0){
+            altY=0.0;
+        }
+        altX=altX+(velX*delta);
+        //energia
+    }
+    //encerramento
+    fclose(velocidadeT);
+    fclose(alturaT);
+    fclose(energiaT);
+    return 0;
+}
